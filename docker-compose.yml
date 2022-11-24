@@ -1,0 +1,14 @@
+services:
+  database:
+    image: postgres
+    container_name: database_deliveries
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/data/postgres
+
+volumes:
+  pgdata:
+    driver: local
