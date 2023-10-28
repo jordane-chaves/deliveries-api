@@ -2,8 +2,12 @@
   "name": "deliveries-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/src/infra/main",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src --ext .ts",
@@ -12,8 +16,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@nestjs/common": "10.2.7",
+    "@nestjs/core": "10.2.7",
+    "@nestjs/platform-express": "10.2.7",
+    "reflect-metadata": "0.1.13",
+    "rxjs": "7.8.1"
+  },
   "devDependencies": {
     "@faker-js/faker": "8.2.0",
+    "@nestjs/cli": "10.2.0",
+    "@nestjs/schematics": "10.0.2",
+    "@types/express": "4.17.20",
     "@types/node": "20.8.6",
     "@typescript-eslint/eslint-plugin": "6.8.0",
     "@typescript-eslint/parser": "6.8.0",
@@ -28,6 +42,7 @@
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-vitest-globals": "1.4.0",
     "prettier": "3.0.3",
+    "source-map-support": "0.5.21",
     "typescript": "5.2.2",
     "vite-tsconfig-paths": "4.2.1",
     "vitest": "0.34.6"
