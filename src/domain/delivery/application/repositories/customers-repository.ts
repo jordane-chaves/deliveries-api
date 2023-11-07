@@ -1,6 +1,6 @@
 import { Customer } from '../../enterprise/entities/customer'
 
-export interface CustomersRepository {
-  findByEmail(email: string): Promise<Customer | null>
-  create(customer: Customer): Promise<void>
+export abstract class CustomersRepository {
+  abstract findByEmail(email: string): Promise<Customer | null>
+  abstract create(customer: Customer): Promise<void>
 }
