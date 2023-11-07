@@ -2,34 +2,33 @@ import request from 'supertest'
 
 import { HashGenerator } from '@/domain/delivery/application/cryptography/hash-generator'
 import { AppModule } from '@/infra/app.module'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { DatabaseModule } from '@/infra/database/database.module'
+import { CustomerFactory } from '@/test/factories/make-customer'
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 
 describe('Authenticate (E2E)', () => {
   let app: INestApplication
-  let prisma: PrismaService
   let hashGenerator: HashGenerator
+  let customerFactory: CustomerFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [CustomerFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
-    prisma = moduleRef.get(PrismaService)
     hashGenerator = moduleRef.get(HashGenerator)
+    customerFactory = moduleRef.get(CustomerFactory)
 
     await app.init()
   })
 
   test('[POST] /sessions', async () => {
-    await prisma.user.create({
-      data: {
-        name: 'John Doe',
-        email: 'johndoe@example.com',
-        password: await hashGenerator.hash('123456'),
-      },
+    await customerFactory.makePrismaCustomer({
+      email: 'johndoe@example.com',
+      password: await hashGenerator.hash('123456'),
     })
 
     const response = await request(app.getHttpServer()).post('/sessions').send({

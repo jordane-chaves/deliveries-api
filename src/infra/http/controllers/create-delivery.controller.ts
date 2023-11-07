@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 import { CreateDeliveryUseCase } from '@/domain/delivery/application/use-cases/create-delivery'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import {
   BadRequestException,
@@ -10,7 +9,6 @@ import {
   Controller,
   HttpCode,
   Post,
-  UseGuards,
 } from '@nestjs/common'
 
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
@@ -24,7 +22,6 @@ const bodyValidationPipe = new ZodValidationPipe(createDeliveryBodySchema)
 type CreateDeliveryBodySchema = z.infer<typeof createDeliveryBodySchema>
 
 @Controller('/deliveries')
-@UseGuards(JwtAuthGuard)
 export class CreateDeliveryController {
   constructor(private createDelivery: CreateDeliveryUseCase) {}
 

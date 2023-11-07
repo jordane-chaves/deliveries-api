@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { CustomerAlreadyExistsError } from '@/domain/delivery/application/use-cases/errors/customer-already-exists-error'
 import { RegisterCustomerUseCase } from '@/domain/delivery/application/use-cases/register-customer'
+import { Public } from '@/infra/auth/public'
 import {
   BadRequestException,
   Body,
@@ -24,6 +25,7 @@ const bodyValidationPipe = new ZodValidationPipe(createAccountBodySchema)
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 
 @Controller('/accounts')
+@Public()
 export class CreateAccountController {
   constructor(private registerCustomer: RegisterCustomerUseCase) {}
 

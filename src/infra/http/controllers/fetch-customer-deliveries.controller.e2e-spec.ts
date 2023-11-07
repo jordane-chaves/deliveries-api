@@ -2,51 +2,56 @@ import request from 'supertest'
 
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { CustomerFactory } from '@/test/factories/make-customer'
+import { CustomerDeliveryFactory } from '@/test/factories/make-customer-delivery'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 
-describe('Create delivery (E2E)', () => {
+describe('Fetch customer deliveries (E2E)', () => {
   let app: INestApplication
-  let prisma: PrismaService
   let jwt: JwtService
   let customerFactory: CustomerFactory
+  let customerDeliveryFactory: CustomerDeliveryFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [CustomerFactory],
+      providers: [CustomerFactory, CustomerDeliveryFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
-    prisma = moduleRef.get(PrismaService)
     jwt = moduleRef.get(JwtService)
     customerFactory = moduleRef.get(CustomerFactory)
+    customerDeliveryFactory = moduleRef.get(CustomerDeliveryFactory)
 
     await app.init()
   })
 
-  test('[POST] /deliveries', async () => {
+  test('[GET] /deliveries', async () => {
     const user = await customerFactory.makePrismaCustomer()
+
+    const delivery1 = await customerDeliveryFactory.makeCustomerDelivery({
+      customerId: user.id,
+    })
+
+    const delivery2 = await customerDeliveryFactory.makeCustomerDelivery({
+      customerId: user.id,
+    })
+
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
     const response = await request(app.getHttpServer())
-      .post('/deliveries')
+      .get('/deliveries')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        itemName: 'New item',
-      })
+      .send()
 
-    expect(response.statusCode).toBe(201)
-
-    const deliveryOnDatabase = await prisma.delivery.findFirst({
-      where: {
-        itemName: 'New item',
-      },
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({
+      deliveries: expect.arrayContaining([
+        expect.objectContaining({ itemName: delivery1.itemName }),
+        expect.objectContaining({ itemName: delivery2.itemName }),
+      ]),
     })
-
-    expect(deliveryOnDatabase).toBeTruthy()
   })
 })

@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { AuthenticateCustomerUseCase } from '@/domain/delivery/application/use-cases/authenticate-customer'
 import { WrongCredentialsError } from '@/domain/delivery/application/use-cases/errors/wrong-credentials-error'
+import { Public } from '@/infra/auth/public'
 import {
   BadRequestException,
   Body,
@@ -22,6 +23,7 @@ const bodyValidationPipe = new ZodValidationPipe(authenticateBodySchema)
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
 @Controller('/sessions')
+@Public()
 export class AuthenticateController {
   constructor(private authenticateCustomer: AuthenticateCustomerUseCase) {}
 
