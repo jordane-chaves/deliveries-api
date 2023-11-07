@@ -9,7 +9,7 @@ import { PrismaService } from '../prisma.service'
 export class PrismaCustomersRepository implements CustomersRepository {
   constructor(private prismaService: PrismaService) {}
 
-  async findByEmail(email: string): Promise<Customer> {
+  async findByEmail(email: string): Promise<Customer | null> {
     const customer = await this.prismaService.user.findUnique({
       where: {
         email,

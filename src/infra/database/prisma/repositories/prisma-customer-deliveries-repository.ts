@@ -12,7 +12,7 @@ export class PrismaCustomerDeliveriesRepository
 {
   constructor(private prismaService: PrismaService) {}
 
-  async findById(id: string): Promise<CustomerDelivery> {
+  async findById(id: string): Promise<CustomerDelivery | null> {
     const customerDelivery = await this.prismaService.delivery.findUnique({
       where: {
         id,
