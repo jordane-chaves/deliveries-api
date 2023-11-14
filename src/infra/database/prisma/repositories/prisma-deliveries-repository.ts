@@ -1,3 +1,4 @@
+import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { DeliveriesRepository } from '@/domain/delivery/application/repositories/deliveries-repository'
 import { Delivery } from '@/domain/delivery/enterprise/entities/delivery'
@@ -76,6 +77,8 @@ export class PrismaDeliveriesRepository implements DeliveriesRepository {
     const data = PrismaDeliveryMapper.toPrismaUpdate(delivery)
 
     await this.prisma.delivery.update(data)
+
+    DomainEvents.dispatchEventsForAggregate(delivery.id)
   }
 
   async create(delivery: Delivery): Promise<void> {

@@ -3,6 +3,7 @@ import { AuthenticateDeliverymanUseCase } from '@/domain/account/application/use
 import { RegisterCustomerUseCase } from '@/domain/account/application/use-cases/register-customer'
 import { RegisterDeliverymanUseCase } from '@/domain/account/application/use-cases/register-deliveryman'
 import { ChooseDeliveryUseCase } from '@/domain/delivery/application/use-cases/choose-delivery'
+import { CompleteDeliveryUseCase } from '@/domain/delivery/application/use-cases/complete-delivery'
 import { CreateDeliveryUseCase } from '@/domain/delivery/application/use-cases/create-delivery'
 import { DeleteDeliveryUseCase } from '@/domain/delivery/application/use-cases/delete-delivery'
 import { EditDeliveryUseCase } from '@/domain/delivery/application/use-cases/edit-delivery'
@@ -18,6 +19,7 @@ import { DatabaseModule } from '../database/database.module'
 import { AuthenticateDeliverymanController } from './controllers/authenticate-deliveryman.controller'
 import { AuthenticateController } from './controllers/authenticate.controller'
 import { ChooseDeliveryController } from './controllers/choose-delivery.controller'
+import { CompleteDeliveryController } from './controllers/complete-delivery.controller'
 import { CreateAccountController } from './controllers/create-account.controller'
 import { CreateDeliveryController } from './controllers/create-delivery.controller'
 import { CreateDeliverymanAccountController } from './controllers/create-deliveryman-account.controller'
@@ -34,6 +36,7 @@ import { ReadNotificationController } from './controllers/read-notification.cont
     AuthenticateController,
     AuthenticateDeliverymanController,
     ChooseDeliveryController,
+    CompleteDeliveryController,
     CreateAccountController,
     CreateDeliveryController,
     CreateDeliverymanAccountController,
@@ -48,6 +51,7 @@ import { ReadNotificationController } from './controllers/read-notification.cont
     AuthenticateCustomerUseCase,
     AuthenticateDeliverymanUseCase,
     ChooseDeliveryUseCase,
+    CompleteDeliveryUseCase,
     CreateDeliveryUseCase,
     DeleteDeliveryUseCase,
     EditDeliveryUseCase,

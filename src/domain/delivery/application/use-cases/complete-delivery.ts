@@ -1,6 +1,7 @@
 import { Either, left, right } from '@/core/either'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 import { Delivery } from '../../enterprise/entities/delivery'
 import { DeliveriesRepository } from '../repositories/deliveries-repository'
@@ -17,6 +18,7 @@ type CompleteDeliveryUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class CompleteDeliveryUseCase {
   constructor(private deliveriesRepository: DeliveriesRepository) {}
 
