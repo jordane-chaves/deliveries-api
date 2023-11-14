@@ -4,10 +4,11 @@ import { z } from 'zod'
 import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 
-import { EnvService } from '../env/env.service'
+import { EnvService } from '../../env/env.service'
 
 const tokenPayloadSchema = z.object({
   sub: z.string().uuid(),
+  roles: z.string().array().optional().default([]),
 })
 
 export type UserPayload = z.infer<typeof tokenPayloadSchema>

@@ -35,7 +35,7 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-# @name fetch_customer_deliveries
+# @name fetch_deliveries
 GET {{baseUrl}}/deliveries
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

@@ -2,8 +2,8 @@ import { z } from 'zod'
 
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { EditDeliveryUseCase } from '@/domain/delivery/application/use-cases/edit-delivery'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CurrentUser } from '@/infra/auth/authentication/current-user-decorator'
+import { UserPayload } from '@/infra/auth/authentication/jwt.strategy'
 import {
   BadRequestException,
   Body,

@@ -1,8 +1,10 @@
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ChooseDeliveryUseCase } from '@/domain/delivery/application/use-cases/choose-delivery'
 import { DeliveryUnavailableError } from '@/domain/delivery/application/use-cases/errors/delivery-unavailable-error'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CurrentUser } from '@/infra/auth/authentication/current-user-decorator'
+import { UserPayload } from '@/infra/auth/authentication/jwt.strategy'
+import { Roles } from '@/infra/auth/authorization/roles'
+import { UserRole } from '@/infra/auth/authorization/user-role'
 import {
   BadRequestException,
   Controller,
@@ -13,6 +15,7 @@ import {
 } from '@nestjs/common'
 
 @Controller('/deliveries/:id/choose')
+@Roles(UserRole.DELIVERYMAN)
 export class ChooseDeliveryController {
   constructor(private chooseDelivery: ChooseDeliveryUseCase) {}
 

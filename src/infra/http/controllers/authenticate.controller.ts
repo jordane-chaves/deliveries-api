@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { AuthenticateCustomerUseCase } from '@/domain/account/application/use-cases/authenticate-customer'
 import { WrongCredentialsError } from '@/domain/account/application/use-cases/errors/wrong-credentials-error'
-import { Public } from '@/infra/auth/public'
+import { Public } from '@/infra/auth/authentication/public'
 import {
   BadRequestException,
   Body,

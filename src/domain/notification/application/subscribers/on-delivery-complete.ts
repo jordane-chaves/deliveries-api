@@ -1,13 +1,13 @@
 import { DomainEvents } from '@/core/events/domain-events'
 import { EventHandler } from '@/core/events/event-handler'
-import { CustomerDeliveriesRepository } from '@/domain/delivery/application/repositories/customer-deliveries-repository'
+import { DeliveriesRepository } from '@/domain/delivery/application/repositories/deliveries-repository'
 import { DeliveryCompletedEvent } from '@/domain/delivery/enterprise/events/delivery-completed'
 
 import { SendNotificationUseCase } from '../use-cases/send-notification'
 
 export class OnDeliveryComplete implements EventHandler {
   constructor(
-    private customerDeliveriesRepository: CustomerDeliveriesRepository,
+    private deliveriesRepository: DeliveriesRepository,
     private sendNotification: SendNotificationUseCase,
   ) {
     this.setupSubscriptions()
@@ -23,7 +23,7 @@ export class OnDeliveryComplete implements EventHandler {
   private async sendDeliveryCompleteNotification({
     delivery,
   }: DeliveryCompletedEvent) {
-    const customerDelivery = await this.customerDeliveriesRepository.findById(
+    const customerDelivery = await this.deliveriesRepository.findById(
       delivery.id.toString(),
     )
 

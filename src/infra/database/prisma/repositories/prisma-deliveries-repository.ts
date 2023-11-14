@@ -8,10 +8,10 @@ import { PrismaService } from '../prisma.service'
 
 @Injectable()
 export class PrismaDeliveriesRepository implements DeliveriesRepository {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
   async findById(id: string): Promise<Delivery | null> {
-    const delivery = await this.prismaService.delivery.findUnique({
+    const delivery = await this.prisma.delivery.findUnique({
       where: {
         id,
       },
@@ -30,7 +30,7 @@ export class PrismaDeliveriesRepository implements DeliveriesRepository {
   ): Promise<Delivery[]> {
     const perPage = 20
 
-    const deliveries = await this.prismaService.delivery.findMany({
+    const deliveries = await this.prisma.delivery.findMany({
       where: {
         ownerId: customerId,
       },
@@ -47,7 +47,7 @@ export class PrismaDeliveriesRepository implements DeliveriesRepository {
   ): Promise<Delivery[]> {
     const perPage = 20
 
-    const deliveries = await this.prismaService.delivery.findMany({
+    const deliveries = await this.prisma.delivery.findMany({
       where: {
         deliverymanId,
       },
@@ -61,7 +61,7 @@ export class PrismaDeliveriesRepository implements DeliveriesRepository {
   async findManyAvailable({ page }: PaginationParams): Promise<Delivery[]> {
     const perPage = 20
 
-    const deliveries = await this.prismaService.delivery.findMany({
+    const deliveries = await this.prisma.delivery.findMany({
       where: {
         deliverymanId: null,
       },
@@ -75,13 +75,13 @@ export class PrismaDeliveriesRepository implements DeliveriesRepository {
   async save(delivery: Delivery): Promise<void> {
     const data = PrismaDeliveryMapper.toPrismaUpdate(delivery)
 
-    await this.prismaService.delivery.update(data)
+    await this.prisma.delivery.update(data)
   }
 
   async create(delivery: Delivery): Promise<void> {
     const data = PrismaDeliveryMapper.toPrisma(delivery)
 
-    await this.prismaService.delivery.create({
+    await this.prisma.delivery.create({
       data,
     })
   }
@@ -89,7 +89,7 @@ export class PrismaDeliveriesRepository implements DeliveriesRepository {
   async delete(delivery: Delivery): Promise<void> {
     const data = PrismaDeliveryMapper.toPrisma(delivery)
 
-    await this.prismaService.delivery.delete({
+    await this.prisma.delivery.delete({
       where: {
         id: data.id,
       },

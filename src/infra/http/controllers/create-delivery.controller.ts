@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 import { CreateDeliveryUseCase } from '@/domain/delivery/application/use-cases/create-delivery'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CurrentUser } from '@/infra/auth/authentication/current-user-decorator'
+import { UserPayload } from '@/infra/auth/authentication/jwt.strategy'
 import {
   BadRequestException,
   Body,

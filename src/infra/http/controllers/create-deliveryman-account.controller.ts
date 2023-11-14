@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { DeliverymanAlreadyExistsError } from '@/domain/account/application/use-cases/errors/deliveryman-already-exists-error'
 import { RegisterDeliverymanUseCase } from '@/domain/account/application/use-cases/register-deliveryman'
-import { Public } from '@/infra/auth/public'
+import { Public } from '@/infra/auth/authentication/public'
 import {
   BadRequestException,
   Body,

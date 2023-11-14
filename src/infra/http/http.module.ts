@@ -9,6 +9,7 @@ import { EditDeliveryUseCase } from '@/domain/delivery/application/use-cases/edi
 import { FetchAvailableDeliveriesUseCase } from '@/domain/delivery/application/use-cases/fetch-available-deliveries'
 import { FetchDeliveriesUseCase } from '@/domain/delivery/application/use-cases/fetch-deliveries'
 import { FetchDeliverymanDeliveriesUseCase } from '@/domain/delivery/application/use-cases/fetch-deliveryman-deliveries'
+import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 import { Module } from '@nestjs/common'
 
 import { AuthModule } from '../auth/auth.module'
@@ -25,6 +26,7 @@ import { EditDeliveryController } from './controllers/edit-delivery.controller'
 import { FetchAvailableDeliveriesController } from './controllers/fetch-available-deliveries.controller'
 import { FetchCustomerDeliveriesController } from './controllers/fetch-customer-deliveries.controller'
 import { FetchDeliverymanDeliveriesController } from './controllers/fetch-deliveryman-deliveries.controller'
+import { ReadNotificationController } from './controllers/read-notification.controller'
 
 @Module({
   imports: [AuthModule, CryptographyModule, DatabaseModule],
@@ -40,6 +42,7 @@ import { FetchDeliverymanDeliveriesController } from './controllers/fetch-delive
     FetchAvailableDeliveriesController,
     FetchCustomerDeliveriesController,
     FetchDeliverymanDeliveriesController,
+    ReadNotificationController,
   ],
   providers: [
     AuthenticateCustomerUseCase,
@@ -53,6 +56,7 @@ import { FetchDeliverymanDeliveriesController } from './controllers/fetch-delive
     FetchAvailableDeliveriesUseCase,
     FetchDeliveriesUseCase,
     FetchDeliverymanDeliveriesUseCase,
+    ReadNotificationUseCase,
   ],
 })
 export class HttpModule {}

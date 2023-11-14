@@ -43,7 +43,10 @@ describe('Choose delivery (E2E)', () => {
 
     const deliveryman = await deliverymanFactory.makePrismaDeliveryman()
 
-    const accessToken = jwt.sign({ sub: deliveryman.id.toString() })
+    const accessToken = jwt.sign({
+      sub: deliveryman.id.toString(),
+      roles: ['Deliveryman'],
+    })
 
     const response = await request(app.getHttpServer())
       .patch(`/deliveries/${delivery.id.toString()}/choose`)

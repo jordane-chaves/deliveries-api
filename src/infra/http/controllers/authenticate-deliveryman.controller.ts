@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { AuthenticateDeliverymanUseCase } from '@/domain/account/application/use-cases/authenticate-deliveryman'
 import { WrongCredentialsError } from '@/domain/account/application/use-cases/errors/wrong-credentials-error'
-import { Public } from '@/infra/auth/public'
+import { Public } from '@/infra/auth/authentication/public'
 import {
   BadRequestException,
   Body,

@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
 import { FetchDeliverymanDeliveriesUseCase } from '@/domain/delivery/application/use-cases/fetch-deliveryman-deliveries'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CurrentUser } from '@/infra/auth/authentication/current-user-decorator'
+import { UserPayload } from '@/infra/auth/authentication/jwt.strategy'
 import { BadRequestException, Controller, Get, Query } from '@nestjs/common'
 
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'

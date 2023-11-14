@@ -1,31 +1,31 @@
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
-import { DeleteDeliveryUseCase } from '@/domain/delivery/application/use-cases/delete-delivery'
+import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 import { CurrentUser } from '@/infra/auth/authentication/current-user-decorator'
 import { UserPayload } from '@/infra/auth/authentication/jwt.strategy'
 import {
   BadRequestException,
   Controller,
-  Delete,
   HttpCode,
   Param,
+  Patch,
   UnauthorizedException,
 } from '@nestjs/common'
 
-@Controller('/deliveries/:id')
-export class DeleteDeliveryController {
-  constructor(private deleteCustomerDelivery: DeleteDeliveryUseCase) {}
+@Controller('/notifications/:id/read')
+export class ReadNotificationController {
+  constructor(private readNotification: ReadNotificationUseCase) {}
 
-  @Delete()
+  @Patch()
   @HttpCode(204)
   async handle(
     @CurrentUser() user: UserPayload,
-    @Param('id') deliveryId: string,
+    @Param('id') notificationId: string,
   ) {
-    const userId = user.sub
+    const recipientId = user.sub
 
-    const result = await this.deleteCustomerDelivery.execute({
-      customerId: userId,
-      deliveryId,
+    const result = await this.readNotification.execute({
+      notificationId,
+      recipientId,
     })
 
     if (result.isLeft()) {
