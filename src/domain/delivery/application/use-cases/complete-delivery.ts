@@ -2,9 +2,8 @@ import { Either, left, right } from '@/core/either'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
-import { DeliverymanDelivery } from '../../enterprise/entities/deliveryman-delivery'
-import { DeliverymanDeliveriesRepository } from '../repositories/deliveryman-deliveries-repository'
-import { DeliverymenRepository } from '../repositories/deliverymen-repository'
+import { Delivery } from '../../enterprise/entities/delivery'
+import { DeliveriesRepository } from '../repositories/deliveries-repository'
 
 interface CompleteDeliveryUseCaseRequest {
   deliverymanId: string
@@ -14,44 +13,31 @@ interface CompleteDeliveryUseCaseRequest {
 type CompleteDeliveryUseCaseResponse = Either<
   NotAllowedError | ResourceNotFoundError,
   {
-    delivery: DeliverymanDelivery
+    delivery: Delivery
   }
 >
 
 export class CompleteDeliveryUseCase {
-  constructor(
-    private deliverymanDeliveriesRepository: DeliverymanDeliveriesRepository,
-    private deliverymenRepository: DeliverymenRepository,
-  ) {}
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async execute(
     request: CompleteDeliveryUseCaseRequest,
   ): Promise<CompleteDeliveryUseCaseResponse> {
     const { deliveryId, deliverymanId } = request
 
-    const deliveryman = await this.deliverymenRepository.findById(deliverymanId)
-
-    if (!deliveryman) {
-      return left(new NotAllowedError())
-    }
-
-    const delivery =
-      await this.deliverymanDeliveriesRepository.findById(deliveryId)
+    const delivery = await this.deliveriesRepository.findById(deliveryId)
 
     if (!delivery) {
       return left(new ResourceNotFoundError())
     }
 
-    const isSameDeliveryman =
-      delivery.deliverymanId && delivery.deliverymanId.equals(deliveryman.id)
-
-    if (!isSameDeliveryman) {
+    if (deliverymanId !== delivery.deliverymanId?.toString()) {
       return left(new NotAllowedError())
     }
 
     delivery.complete()
 
-    await this.deliverymanDeliveriesRepository.save(delivery)
+    await this.deliveriesRepository.save(delivery)
 
     return right({
       delivery,

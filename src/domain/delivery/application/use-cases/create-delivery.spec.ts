@@ -1,17 +1,16 @@
-import { InMemoryCustomerDeliveriesRepository } from '@/test/repositories/in-memory-customer-deliveries-repository'
+import { InMemoryDeliveriesRepository } from '@/test/repositories/in-memory-deliveries-repository'
 
 import { CreateDeliveryUseCase } from './create-delivery'
 
-let inMemoryCustomerDeliveriesRepository: InMemoryCustomerDeliveriesRepository
+let inMemoryDeliveriesRepository: InMemoryDeliveriesRepository
 
 let sut: CreateDeliveryUseCase
 
 describe('Create Delivery', () => {
   beforeEach(() => {
-    inMemoryCustomerDeliveriesRepository =
-      new InMemoryCustomerDeliveriesRepository()
+    inMemoryDeliveriesRepository = new InMemoryDeliveriesRepository()
 
-    sut = new CreateDeliveryUseCase(inMemoryCustomerDeliveriesRepository)
+    sut = new CreateDeliveryUseCase(inMemoryDeliveriesRepository)
   })
 
   it('should be able to create a new delivery', async () => {
@@ -21,7 +20,7 @@ describe('Create Delivery', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    expect(inMemoryCustomerDeliveriesRepository.items[0].itemName).toEqual(
+    expect(inMemoryDeliveriesRepository.items[0].itemName).toEqual(
       'Example item',
     )
   })

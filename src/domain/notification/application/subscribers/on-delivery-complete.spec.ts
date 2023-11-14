@@ -1,9 +1,7 @@
 import { SpyInstance } from 'vitest'
 
-import { makeCustomerDelivery } from '@/test/factories/make-customer-delivery'
-import { makeDeliverymanDelivery } from '@/test/factories/make-deliveryman-delivery'
-import { InMemoryCustomerDeliveriesRepository } from '@/test/repositories/in-memory-customer-deliveries-repository'
-import { InMemoryDeliverymanDeliveriesRepository } from '@/test/repositories/in-memory-deliveryman-deliveries-repository'
+import { makeDelivery } from '@/test/factories/make-delivery'
+import { InMemoryDeliveriesRepository } from '@/test/repositories/in-memory-deliveries-repository'
 import { InMemoryNotificationsRepository } from '@/test/repositories/in-memory-notifications-repository'
 import { waitFor } from '@/test/utils/wait-for'
 
@@ -14,8 +12,7 @@ import {
 } from '../use-cases/send-notification'
 import { OnDeliveryComplete } from './on-delivery-complete'
 
-let inMemoryCustomerDeliveriesRepository: InMemoryCustomerDeliveriesRepository
-let inMemoryDeliverymanDeliveriesRepository: InMemoryDeliverymanDeliveriesRepository
+let inMemoryDeliveriesRepository: InMemoryDeliveriesRepository
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository
 
 let sendNotification: SendNotificationUseCase
@@ -27,10 +24,7 @@ let sendNotificationExecuteSpy: SpyInstance<
 
 describe('On Delivery Complete', () => {
   beforeEach(() => {
-    inMemoryCustomerDeliveriesRepository =
-      new InMemoryCustomerDeliveriesRepository()
-    inMemoryDeliverymanDeliveriesRepository =
-      new InMemoryDeliverymanDeliveriesRepository()
+    inMemoryDeliveriesRepository = new InMemoryDeliveriesRepository()
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
 
     sendNotification = new SendNotificationUseCase(
@@ -39,22 +33,15 @@ describe('On Delivery Complete', () => {
 
     sendNotificationExecuteSpy = vi.spyOn(sendNotification, 'execute')
 
-    new OnDeliveryComplete(
-      inMemoryCustomerDeliveriesRepository,
-      sendNotification,
-    )
+    new OnDeliveryComplete(inMemoryDeliveriesRepository, sendNotification)
   })
 
   it('should send notification when a delivery is completed', async () => {
-    const customerDelivery = makeCustomerDelivery()
-    const deliverymanDelivery = makeDeliverymanDelivery({}, customerDelivery.id)
+    const delivery = makeDelivery()
+    inMemoryDeliveriesRepository.items.push(delivery)
 
-    inMemoryCustomerDeliveriesRepository.items.push(customerDelivery)
-    inMemoryDeliverymanDeliveriesRepository.items.push(deliverymanDelivery)
-
-    deliverymanDelivery.complete()
-
-    inMemoryDeliverymanDeliveriesRepository.save(deliverymanDelivery)
+    delivery.complete()
+    inMemoryDeliveriesRepository.save(delivery)
 
     await waitFor(() => {
       expect(sendNotificationExecuteSpy).toHaveBeenCalled()

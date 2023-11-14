@@ -1,7 +1,8 @@
 import { Either, right } from '@/core/either'
+import { Injectable } from '@nestjs/common'
 
-import { DeliverymanDelivery } from '../../enterprise/entities/deliveryman-delivery'
-import { DeliverymanDeliveriesRepository } from '../repositories/deliveryman-deliveries-repository'
+import { Delivery } from '../../enterprise/entities/delivery'
+import { DeliveriesRepository } from '../repositories/deliveries-repository'
 
 interface FetchDeliverymanDeliveriesUseCaseRequest {
   deliverymanId: string
@@ -11,25 +12,23 @@ interface FetchDeliverymanDeliveriesUseCaseRequest {
 type FetchDeliverymanDeliveriesUseCaseResponse = Either<
   null,
   {
-    deliveries: DeliverymanDelivery[]
+    deliveries: Delivery[]
   }
 >
 
+@Injectable()
 export class FetchDeliverymanDeliveriesUseCase {
-  constructor(
-    private deliverymanDeliveriesRepository: DeliverymanDeliveriesRepository,
-  ) {}
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async execute(
     request: FetchDeliverymanDeliveriesUseCaseRequest,
   ): Promise<FetchDeliverymanDeliveriesUseCaseResponse> {
     const { deliverymanId, page } = request
 
-    const deliveries =
-      await this.deliverymanDeliveriesRepository.findManyByDeliverymanId(
-        deliverymanId,
-        { page },
-      )
+    const deliveries = await this.deliveriesRepository.findManyByDeliverymanId(
+      deliverymanId,
+      { page },
+    )
 
     return right({
       deliveries,

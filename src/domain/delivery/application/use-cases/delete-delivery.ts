@@ -1,9 +1,9 @@
 import { Either, left, right } from '@/core/either'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
-import { CustomerDeliveriesRepository } from '../repositories/customer-deliveries-repository'
-import { DeliverymanDeliveriesRepository } from '../repositories/deliveryman-deliveries-repository'
+import { DeliveriesRepository } from '../repositories/deliveries-repository'
 import { DeliveryInProgressError } from './errors/delivery-in-progress-error'
 
 interface DeleteDeliveryUseCaseRequest {
@@ -16,38 +16,32 @@ type DeleteDeliveryUseCaseResponse = Either<
   null
 >
 
+@Injectable()
 export class DeleteDeliveryUseCase {
-  constructor(
-    private customerDeliveriesRepository: CustomerDeliveriesRepository,
-    private deliverymanDeliveriesRepository: DeliverymanDeliveriesRepository,
-  ) {}
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async execute(
     request: DeleteDeliveryUseCaseRequest,
   ): Promise<DeleteDeliveryUseCaseResponse> {
     const { customerId, deliveryId } = request
 
-    const delivery =
-      await this.customerDeliveriesRepository.findById(deliveryId)
+    const delivery = await this.deliveriesRepository.findById(deliveryId)
 
     if (!delivery) {
       return left(new ResourceNotFoundError())
     }
 
-    if (customerId !== delivery.customerId.toString()) {
+    if (customerId !== delivery.ownerId.toString()) {
       return left(new NotAllowedError())
     }
 
-    const deliverymanDelivery =
-      await this.deliverymanDeliveriesRepository.findById(deliveryId)
+    const deliveryUnavailable = !!delivery.deliverymanId
 
-    const isDeliveryInProgress = !!deliverymanDelivery?.deliverymanId
-
-    if (isDeliveryInProgress) {
+    if (deliveryUnavailable) {
       return left(new DeliveryInProgressError())
     }
 
-    await this.customerDeliveriesRepository.delete(delivery)
+    await this.deliveriesRepository.delete(delivery)
 
     return right(null)
   }

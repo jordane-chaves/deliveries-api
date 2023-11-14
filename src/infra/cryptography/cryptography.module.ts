@@ -1,6 +1,6 @@
-import { Encrypter } from '@/domain/delivery/application/cryptography/encrypter'
-import { HashComparer } from '@/domain/delivery/application/cryptography/hash-comparer'
-import { HashGenerator } from '@/domain/delivery/application/cryptography/hash-generator'
+import { Encrypter } from '@/domain/account/application/cryptography/encrypter'
+import { HashComparer } from '@/domain/account/application/cryptography/hash-comparer'
+import { HashGenerator } from '@/domain/account/application/cryptography/hash-generator'
 import { Module } from '@nestjs/common'
 
 import { BcryptHasher } from './bcrypt-hasher'

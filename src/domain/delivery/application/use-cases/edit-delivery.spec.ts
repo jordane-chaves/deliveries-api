@@ -1,31 +1,30 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
-import { makeCustomerDelivery } from '@/test/factories/make-customer-delivery'
-import { InMemoryCustomerDeliveriesRepository } from '@/test/repositories/in-memory-customer-deliveries-repository'
+import { makeDelivery } from '@/test/factories/make-delivery'
+import { InMemoryDeliveriesRepository } from '@/test/repositories/in-memory-deliveries-repository'
 
 import { EditDeliveryUseCase } from './edit-delivery'
 
-let inMemoryCustomerDeliveriesRepository: InMemoryCustomerDeliveriesRepository
+let inMemoryDeliveriesRepository: InMemoryDeliveriesRepository
 
 let sut: EditDeliveryUseCase
 
 describe('Edit Delivery', () => {
   beforeEach(() => {
-    inMemoryCustomerDeliveriesRepository =
-      new InMemoryCustomerDeliveriesRepository()
+    inMemoryDeliveriesRepository = new InMemoryDeliveriesRepository()
 
-    sut = new EditDeliveryUseCase(inMemoryCustomerDeliveriesRepository)
+    sut = new EditDeliveryUseCase(inMemoryDeliveriesRepository)
   })
 
-  it('should be able to edit a customer delivery', async () => {
-    const delivery = makeCustomerDelivery(
+  it('should be able to edit a delivery', async () => {
+    const delivery = makeDelivery(
       {
-        customerId: new UniqueEntityID('customer-1'),
+        ownerId: new UniqueEntityID('customer-1'),
       },
       new UniqueEntityID('delivery-1'),
     )
 
-    inMemoryCustomerDeliveriesRepository.items.push(delivery)
+    inMemoryDeliveriesRepository.items.push(delivery)
 
     const result = await sut.execute({
       customerId: 'customer-1',
@@ -35,21 +34,21 @@ describe('Edit Delivery', () => {
 
     expect(result.isRight()).toBe(true)
     expect(result.value).toEqual({
-      customerDelivery: expect.objectContaining({
+      delivery: expect.objectContaining({
         itemName: 'New item',
       }),
     })
   })
 
-  it('should not be able to edit a delivery from another customer', async () => {
-    const delivery = makeCustomerDelivery(
+  it('should not be able to edit a delivery from another user', async () => {
+    const delivery = makeDelivery(
       {
-        customerId: new UniqueEntityID('customer-1'),
+        ownerId: new UniqueEntityID('customer-1'),
       },
       new UniqueEntityID('delivery-1'),
     )
 
-    inMemoryCustomerDeliveriesRepository.items.push(delivery)
+    inMemoryDeliveriesRepository.items.push(delivery)
 
     const result = await sut.execute({
       customerId: 'customer-2',

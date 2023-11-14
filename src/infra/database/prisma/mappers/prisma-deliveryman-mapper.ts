@@ -1,5 +1,5 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { Deliveryman } from '@/domain/delivery/enterprise/entities/deliveryman'
+import { Deliveryman } from '@/domain/account/enterprise/entities/deliveryman'
 import { Prisma, User as PrismaUser } from '@prisma/client'
 
 export class PrismaDeliverymanMapper {

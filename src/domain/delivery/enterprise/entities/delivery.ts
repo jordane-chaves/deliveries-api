@@ -1,14 +1,30 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Optional } from '@prisma/client/runtime/library'
+
+import { DeliveryCompletedEvent } from '../events/delivery-completed'
 
 export interface DeliveryProps {
+  ownerId: UniqueEntityID
+  deliverymanId?: UniqueEntityID | null
   itemName: string
   createdAt: Date
   endAt?: Date | null
 }
 
-export abstract class Delivery<
-  Props extends DeliveryProps,
-> extends AggregateRoot<Props> {
+export class Delivery extends AggregateRoot<DeliveryProps> {
+  get ownerId() {
+    return this.props.ownerId
+  }
+
+  get deliverymanId() {
+    return this.props.deliverymanId
+  }
+
+  set deliverymanId(deliverymanId: UniqueEntityID | null | undefined) {
+    this.props.deliverymanId = deliverymanId
+  }
+
   get itemName() {
     return this.props.itemName
   }
@@ -23,5 +39,28 @@ export abstract class Delivery<
 
   get endAt() {
     return this.props.endAt
+  }
+
+  complete() {
+    if (!this.endAt) {
+      this.addDomainEvent(new DeliveryCompletedEvent(this))
+    }
+
+    this.props.endAt = new Date()
+  }
+
+  static create(
+    props: Optional<DeliveryProps, 'deliverymanId' | 'createdAt' | 'endAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const delivery = new Delivery(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    )
+
+    return delivery
   }
 }

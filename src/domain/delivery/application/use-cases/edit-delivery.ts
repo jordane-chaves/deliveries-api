@@ -1,9 +1,10 @@
 import { Either, left, right } from '@/core/either'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
-import { CustomerDelivery } from '../../enterprise/entities/customer-delivery'
-import { CustomerDeliveriesRepository } from '../repositories/customer-deliveries-repository'
+import { Delivery } from '../../enterprise/entities/delivery'
+import { DeliveriesRepository } from '../repositories/deliveries-repository'
 
 interface EditDeliveryUseCaseRequest {
   customerId: string
@@ -14,37 +15,35 @@ interface EditDeliveryUseCaseRequest {
 type EditDeliveryUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
   {
-    customerDelivery: CustomerDelivery
+    delivery: Delivery
   }
 >
 
+@Injectable()
 export class EditDeliveryUseCase {
-  constructor(
-    private customerDeliveriesRepository: CustomerDeliveriesRepository,
-  ) {}
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async execute(
     request: EditDeliveryUseCaseRequest,
   ): Promise<EditDeliveryUseCaseResponse> {
     const { customerId, deliveryId, itemName } = request
 
-    const customerDelivery =
-      await this.customerDeliveriesRepository.findById(deliveryId)
+    const delivery = await this.deliveriesRepository.findById(deliveryId)
 
-    if (!customerDelivery) {
+    if (!delivery) {
       return left(new ResourceNotFoundError())
     }
 
-    if (customerId !== customerDelivery.customerId.toString()) {
+    if (customerId !== delivery.ownerId.toString()) {
       return left(new NotAllowedError())
     }
 
-    customerDelivery.itemName = itemName
+    delivery.itemName = itemName
 
-    await this.customerDeliveriesRepository.save(customerDelivery)
+    await this.deliveriesRepository.save(delivery)
 
     return right({
-      customerDelivery,
+      delivery,
     })
   }
 }

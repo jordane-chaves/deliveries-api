@@ -1,5 +1,5 @@
-import { CustomersRepository } from '@/domain/delivery/application/repositories/customers-repository'
-import { Customer } from '@/domain/delivery/enterprise/entities/customer'
+import { CustomersRepository } from '@/domain/account/application/repositories/customers-repository'
+import { Customer } from '@/domain/account/enterprise/entities/customer'
 import { Injectable } from '@nestjs/common'
 
 import { PrismaCustomerMapper } from '../mappers/prisma-customer-mapper'

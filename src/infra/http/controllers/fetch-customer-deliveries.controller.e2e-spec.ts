@@ -3,7 +3,7 @@ import request from 'supertest'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { CustomerFactory } from '@/test/factories/make-customer'
-import { CustomerDeliveryFactory } from '@/test/factories/make-customer-delivery'
+import { DeliveryFactory } from '@/test/factories/make-delivery'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
@@ -12,18 +12,18 @@ describe('Fetch customer deliveries (E2E)', () => {
   let app: INestApplication
   let jwt: JwtService
   let customerFactory: CustomerFactory
-  let customerDeliveryFactory: CustomerDeliveryFactory
+  let deliveryFactory: DeliveryFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [CustomerFactory, CustomerDeliveryFactory],
+      providers: [CustomerFactory, DeliveryFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
     jwt = moduleRef.get(JwtService)
     customerFactory = moduleRef.get(CustomerFactory)
-    customerDeliveryFactory = moduleRef.get(CustomerDeliveryFactory)
+    deliveryFactory = moduleRef.get(DeliveryFactory)
 
     await app.init()
   })
@@ -31,12 +31,12 @@ describe('Fetch customer deliveries (E2E)', () => {
   test('[GET] /deliveries', async () => {
     const user = await customerFactory.makePrismaCustomer()
 
-    const delivery1 = await customerDeliveryFactory.makeCustomerDelivery({
-      customerId: user.id,
+    const delivery1 = await deliveryFactory.makePrismaDelivery({
+      ownerId: user.id,
     })
 
-    const delivery2 = await customerDeliveryFactory.makeCustomerDelivery({
-      customerId: user.id,
+    const delivery2 = await deliveryFactory.makePrismaDelivery({
+      ownerId: user.id,
     })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })

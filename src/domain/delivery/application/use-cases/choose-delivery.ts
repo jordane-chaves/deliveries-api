@@ -1,10 +1,11 @@
 import { Either, left, right } from '@/core/either'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
-import { DeliverymanDelivery } from '../../enterprise/entities/deliveryman-delivery'
-import { DeliverymanDeliveriesRepository } from '../repositories/deliveryman-deliveries-repository'
-import { DeliverymenRepository } from '../repositories/deliverymen-repository'
+import { Delivery } from '../../enterprise/entities/delivery'
+import { DeliveriesRepository } from '../repositories/deliveries-repository'
 import { DeliveryUnavailableError } from './errors/delivery-unavailable-error'
 
 interface ChooseDeliveryUseCaseRequest {
@@ -15,29 +16,20 @@ interface ChooseDeliveryUseCaseRequest {
 type ChooseDeliveryUseCaseResponse = Either<
   NotAllowedError | ResourceNotFoundError | DeliveryUnavailableError,
   {
-    delivery: DeliverymanDelivery
+    delivery: Delivery
   }
 >
 
+@Injectable()
 export class ChooseDeliveryUseCase {
-  constructor(
-    private deliverymanDeliveriesRepository: DeliverymanDeliveriesRepository,
-    private deliverymenRepository: DeliverymenRepository,
-  ) {}
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async execute(
     request: ChooseDeliveryUseCaseRequest,
   ): Promise<ChooseDeliveryUseCaseResponse> {
     const { deliveryId, deliverymanId } = request
 
-    const deliveryman = await this.deliverymenRepository.findById(deliverymanId)
-
-    if (!deliveryman) {
-      return left(new NotAllowedError())
-    }
-
-    const delivery =
-      await this.deliverymanDeliveriesRepository.findById(deliveryId)
+    const delivery = await this.deliveriesRepository.findById(deliveryId)
 
     if (!delivery) {
       return left(new ResourceNotFoundError())
@@ -49,9 +41,9 @@ export class ChooseDeliveryUseCase {
       return left(new DeliveryUnavailableError())
     }
 
-    delivery.deliverymanId = deliveryman.id
+    delivery.deliverymanId = new UniqueEntityID(deliverymanId)
 
-    await this.deliverymanDeliveriesRepository.save(delivery)
+    await this.deliveriesRepository.save(delivery)
 
     return right({
       delivery,

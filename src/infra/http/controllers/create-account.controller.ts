@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-import { CustomerAlreadyExistsError } from '@/domain/delivery/application/use-cases/errors/customer-already-exists-error'
-import { RegisterCustomerUseCase } from '@/domain/delivery/application/use-cases/register-customer'
+import { CustomerAlreadyExistsError } from '@/domain/account/application/use-cases/errors/customer-already-exists-error'
+import { RegisterCustomerUseCase } from '@/domain/account/application/use-cases/register-customer'
 import { Public } from '@/infra/auth/public'
 import {
   BadRequestException,

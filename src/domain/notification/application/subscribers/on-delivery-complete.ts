@@ -29,7 +29,7 @@ export class OnDeliveryComplete implements EventHandler {
 
     if (customerDelivery) {
       await this.sendNotification.execute({
-        recipientId: customerDelivery.customerId.toString(),
+        recipientId: customerDelivery.ownerId.toString(),
         title: 'Delivery completed.',
         content: `"${customerDelivery.itemName}" delivery has been completed.`,
       })

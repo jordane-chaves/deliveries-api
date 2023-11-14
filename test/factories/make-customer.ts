@@ -2,7 +2,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import {
   Customer,
   CustomerProps,
-} from '@/domain/delivery/enterprise/entities/customer'
+} from '@/domain/account/enterprise/entities/customer'
 import { PrismaCustomerMapper } from '@/infra/database/prisma/mappers/prisma-customer-mapper'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { faker } from '@faker-js/faker'

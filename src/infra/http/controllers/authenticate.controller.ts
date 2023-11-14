@@ -1,12 +1,13 @@
 import { z } from 'zod'
 
-import { AuthenticateCustomerUseCase } from '@/domain/delivery/application/use-cases/authenticate-customer'
-import { WrongCredentialsError } from '@/domain/delivery/application/use-cases/errors/wrong-credentials-error'
+import { AuthenticateCustomerUseCase } from '@/domain/account/application/use-cases/authenticate-customer'
+import { WrongCredentialsError } from '@/domain/account/application/use-cases/errors/wrong-credentials-error'
 import { Public } from '@/infra/auth/public'
 import {
   BadRequestException,
   Body,
   Controller,
+  HttpCode,
   Post,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -28,6 +29,7 @@ export class AuthenticateController {
   constructor(private authenticateCustomer: AuthenticateCustomerUseCase) {}
 
   @Post()
+  @HttpCode(200)
   async handle(@Body(bodyValidationPipe) body: AuthenticateBodySchema) {
     const { email, password } = body
 

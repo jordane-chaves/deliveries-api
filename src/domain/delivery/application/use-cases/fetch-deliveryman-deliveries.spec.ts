@@ -1,32 +1,29 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { makeDeliverymanDelivery } from '@/test/factories/make-deliveryman-delivery'
-import { InMemoryDeliverymanDeliveriesRepository } from '@/test/repositories/in-memory-deliveryman-deliveries-repository'
+import { makeDelivery } from '@/test/factories/make-delivery'
+import { InMemoryDeliveriesRepository } from '@/test/repositories/in-memory-deliveries-repository'
 
 import { FetchDeliverymanDeliveriesUseCase } from './fetch-deliveryman-deliveries'
 
-let inMemoryDeliverymanDeliveriesRepository: InMemoryDeliverymanDeliveriesRepository
+let inMemoryDeliveriesRepository: InMemoryDeliveriesRepository
 
 let sut: FetchDeliverymanDeliveriesUseCase
 
 describe('Fetch Deliveryman Deliveries', () => {
   beforeEach(() => {
-    inMemoryDeliverymanDeliveriesRepository =
-      new InMemoryDeliverymanDeliveriesRepository()
+    inMemoryDeliveriesRepository = new InMemoryDeliveriesRepository()
 
-    sut = new FetchDeliverymanDeliveriesUseCase(
-      inMemoryDeliverymanDeliveriesRepository,
-    )
+    sut = new FetchDeliverymanDeliveriesUseCase(inMemoryDeliveriesRepository)
   })
 
   it('should be able to fetch deliveryman deliveries', async () => {
-    inMemoryDeliverymanDeliveriesRepository.items.push(
-      makeDeliverymanDelivery({
+    inMemoryDeliveriesRepository.items.push(
+      makeDelivery({
         deliverymanId: new UniqueEntityID('deliveryman-1'),
       }),
-      makeDeliverymanDelivery({
+      makeDelivery({
         deliverymanId: new UniqueEntityID('deliveryman-1'),
       }),
-      makeDeliverymanDelivery({
+      makeDelivery({
         deliverymanId: new UniqueEntityID('deliveryman-1'),
       }),
     )
@@ -54,8 +51,8 @@ describe('Fetch Deliveryman Deliveries', () => {
 
   it('should be able to fetch paginated deliveryman deliveries', async () => {
     for (let i = 1; i <= 22; i++) {
-      inMemoryDeliverymanDeliveriesRepository.items.push(
-        makeDeliverymanDelivery({
+      inMemoryDeliveriesRepository.items.push(
+        makeDelivery({
           deliverymanId: new UniqueEntityID('deliveryman-1'),
         }),
       )

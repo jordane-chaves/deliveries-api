@@ -1,6 +1,6 @@
 import request from 'supertest'
 
-import { HashGenerator } from '@/domain/delivery/application/cryptography/hash-generator'
+import { HashGenerator } from '@/domain/account/application/cryptography/hash-generator'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { CustomerFactory } from '@/test/factories/make-customer'
@@ -36,7 +36,7 @@ describe('Authenticate (E2E)', () => {
       password: '123456',
     })
 
-    expect(response.statusCode).toBe(201)
+    expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
       access_token: expect.any(String),
     })

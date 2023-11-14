@@ -1,5 +1,5 @@
-import { DeliverymenRepository } from '@/domain/delivery/application/repositories/deliverymen-repository'
-import { Deliveryman } from '@/domain/delivery/enterprise/entities/deliveryman'
+import { DeliverymenRepository } from '@/domain/account/application/repositories/deliverymen-repository'
+import { Deliveryman } from '@/domain/account/enterprise/entities/deliveryman'
 
 export class InMemoryDeliverymenRepository implements DeliverymenRepository {
   public items: Deliveryman[] = []

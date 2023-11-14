@@ -1,36 +1,27 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
-import { makeCustomerDelivery } from '@/test/factories/make-customer-delivery'
-import { makeDeliverymanDelivery } from '@/test/factories/make-deliveryman-delivery'
-import { InMemoryCustomerDeliveriesRepository } from '@/test/repositories/in-memory-customer-deliveries-repository'
-import { InMemoryDeliverymanDeliveriesRepository } from '@/test/repositories/in-memory-deliveryman-deliveries-repository'
+import { makeDelivery } from '@/test/factories/make-delivery'
+import { InMemoryDeliveriesRepository } from '@/test/repositories/in-memory-deliveries-repository'
 
 import { DeleteDeliveryUseCase } from './delete-delivery'
 import { DeliveryInProgressError } from './errors/delivery-in-progress-error'
 
-let inMemoryCustomerDeliveriesRepository: InMemoryCustomerDeliveriesRepository
-let inMemoryDeliverymanDeliveriesRepository: InMemoryDeliverymanDeliveriesRepository
+let inMemoryDeliveriesRepository: InMemoryDeliveriesRepository
 
 let sut: DeleteDeliveryUseCase
 
 describe('Delete Delivery', () => {
   beforeEach(() => {
-    inMemoryCustomerDeliveriesRepository =
-      new InMemoryCustomerDeliveriesRepository()
-    inMemoryDeliverymanDeliveriesRepository =
-      new InMemoryDeliverymanDeliveriesRepository()
+    inMemoryDeliveriesRepository = new InMemoryDeliveriesRepository()
 
-    sut = new DeleteDeliveryUseCase(
-      inMemoryCustomerDeliveriesRepository,
-      inMemoryDeliverymanDeliveriesRepository,
-    )
+    sut = new DeleteDeliveryUseCase(inMemoryDeliveriesRepository)
   })
 
-  it('should be able to delete a customer delivery', async () => {
-    await inMemoryCustomerDeliveriesRepository.create(
-      makeCustomerDelivery(
+  it('should be able to delete a delivery', async () => {
+    await inMemoryDeliveriesRepository.create(
+      makeDelivery(
         {
-          customerId: new UniqueEntityID('customer-1'),
+          ownerId: new UniqueEntityID('customer-1'),
         },
         new UniqueEntityID('delivery-1'),
       ),
@@ -42,14 +33,14 @@ describe('Delete Delivery', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    expect(inMemoryCustomerDeliveriesRepository.items).toHaveLength(0)
+    expect(inMemoryDeliveriesRepository.items).toHaveLength(0)
   })
 
-  it('should not be able to delete a delivery from another customer', async () => {
-    await inMemoryCustomerDeliveriesRepository.create(
-      makeCustomerDelivery(
+  it('should not be able to delete a delivery from another user', async () => {
+    await inMemoryDeliveriesRepository.create(
+      makeDelivery(
         {
-          customerId: new UniqueEntityID('customer-1'),
+          ownerId: new UniqueEntityID('customer-1'),
         },
         new UniqueEntityID('delivery-1'),
       ),
@@ -65,22 +56,15 @@ describe('Delete Delivery', () => {
   })
 
   it('should not be able to delete unavailable delivery', async () => {
-    const customerDelivery = makeCustomerDelivery(
+    const delivery = makeDelivery(
       {
-        customerId: new UniqueEntityID('customer-1'),
+        ownerId: new UniqueEntityID('customer-1'),
+        deliverymanId: new UniqueEntityID('deliveryman-1'),
       },
       new UniqueEntityID('delivery-1'),
     )
 
-    inMemoryCustomerDeliveriesRepository.items.push(customerDelivery)
-    inMemoryDeliverymanDeliveriesRepository.items.push(
-      makeDeliverymanDelivery(
-        {
-          deliverymanId: new UniqueEntityID('deliveryman-1'),
-        },
-        customerDelivery.id,
-      ),
-    )
+    inMemoryDeliveriesRepository.items.push(delivery)
 
     const result = await sut.execute({
       customerId: 'customer-1',

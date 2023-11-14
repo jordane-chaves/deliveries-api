@@ -1,4 +1,5 @@
 import { Either, left, right } from '@/core/either'
+import { Injectable } from '@nestjs/common'
 
 import { Deliveryman } from '../../enterprise/entities/deliveryman'
 import { HashGenerator } from '../cryptography/hash-generator'
@@ -16,6 +17,7 @@ type RegisterDeliverymanUseCaseResponse = Either<
   { deliveryman: Deliveryman }
 >
 
+@Injectable()
 export class RegisterDeliverymanUseCase {
   constructor(
     private deliverymenRepository: DeliverymenRepository,

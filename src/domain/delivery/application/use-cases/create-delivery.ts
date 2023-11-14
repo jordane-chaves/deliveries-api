@@ -2,8 +2,8 @@ import { Either, right } from '@/core/either'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Injectable } from '@nestjs/common'
 
-import { CustomerDelivery } from '../../enterprise/entities/customer-delivery'
-import { CustomerDeliveriesRepository } from '../repositories/customer-deliveries-repository'
+import { Delivery } from '../../enterprise/entities/delivery'
+import { DeliveriesRepository } from '../repositories/deliveries-repository'
 
 interface CreateDeliveryUseCaseRequest {
   customerId: string
@@ -13,30 +13,28 @@ interface CreateDeliveryUseCaseRequest {
 type CreateDeliveryUseCaseResponse = Either<
   null,
   {
-    customerDelivery: CustomerDelivery
+    delivery: Delivery
   }
 >
 
 @Injectable()
 export class CreateDeliveryUseCase {
-  constructor(
-    private customerDeliveriesRepository: CustomerDeliveriesRepository,
-  ) {}
+  constructor(private deliveriesRepository: DeliveriesRepository) {}
 
   async execute(
     request: CreateDeliveryUseCaseRequest,
   ): Promise<CreateDeliveryUseCaseResponse> {
     const { customerId, itemName } = request
 
-    const customerDelivery = CustomerDelivery.create({
-      customerId: new UniqueEntityID(customerId),
+    const delivery = Delivery.create({
+      ownerId: new UniqueEntityID(customerId),
       itemName,
     })
 
-    await this.customerDeliveriesRepository.create(customerDelivery)
+    await this.deliveriesRepository.create(delivery)
 
     return right({
-      customerDelivery,
+      delivery,
     })
   }
 }

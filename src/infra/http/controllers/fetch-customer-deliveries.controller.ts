@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
-import { FetchCustomerDeliveriesUseCase } from '@/domain/delivery/application/use-cases/fetch-customer-deliveries'
+import { FetchDeliveriesUseCase } from '@/domain/delivery/application/use-cases/fetch-deliveries'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { BadRequestException, Controller, Get, Query } from '@nestjs/common'
 
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
-import { CustomerDeliveryPresenter } from '../presenters/customer-delivery-presenter'
+import { DeliveryPresenter } from '../presenters/delivery-presenter'
 
 const pageQueryParamSchema = z
   .string()
@@ -21,9 +21,7 @@ type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
 
 @Controller('/deliveries')
 export class FetchCustomerDeliveriesController {
-  constructor(
-    private fetchCustomerDeliveries: FetchCustomerDeliveriesUseCase,
-  ) {}
+  constructor(private fetchDeliveries: FetchDeliveriesUseCase) {}
 
   @Get()
   async handle(
@@ -32,7 +30,7 @@ export class FetchCustomerDeliveriesController {
   ) {
     const userId = user.sub
 
-    const result = await this.fetchCustomerDeliveries.execute({
+    const result = await this.fetchDeliveries.execute({
       customerId: userId,
       page,
     })
@@ -44,7 +42,7 @@ export class FetchCustomerDeliveriesController {
     const { deliveries } = result.value
 
     return {
-      deliveries: deliveries.map(CustomerDeliveryPresenter.toHTTP),
+      deliveries: deliveries.map(DeliveryPresenter.toHTTP),
     }
   }
 }
