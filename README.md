@@ -5,6 +5,7 @@
 <p align="center">
   <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-executando-a-aplicação">Executando a aplicação</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-licença">Licença</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#autor">Autor</a>
 </p>
@@ -45,6 +46,41 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [Docker](https://docker.com/)
 - [Postgres](https://www.postgresql.org/)
 - [JWT](https://jwt.io/)
+
+## 🎲 Executando a aplicação
+
+1. Clone este repositório
+2. Instale as dependências
+
+   ```bash
+   npm install
+   ```
+
+3. Crie uma cópia do arquivo `.env.example` e renomeie para `.env`
+4. Preencha todas as variáveis do arquivo `.env`, que foi copiado no passo anterior
+
+   > As variáveis `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` precisam ser preenchidas respectivamente com as chaves RSA privada e pública, criptografadas em base64.
+   > Se tiver dúvidas de como gerar estas chaves, pesquise por `generate RSA key online` e `base64 encode` para gerar as chaves sem muitas dificuldades.
+
+   > OBS.: Em ambiente de produção não é aconselhável utilizar as chaves que foram geradas online.
+
+5. Inicie o container do banco de dados
+
+   ```bash
+   docker-compose up -d
+   ```
+
+6. Crie todas as tabelas no banco de dados
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+7. Inicie o servidor
+
+   ```bash
+    npm run start:dev
+   ```
 
 ## 📝 Licença
 
