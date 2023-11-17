@@ -22,9 +22,15 @@
 
 ## 💻 Projeto
 
-Nesta aplicação, temos de um lado o cliente que irá se cadastrar e cadastrar itens para serem entregues, e do outro, o entregador que poderá pegar determinada entrega para ser realizada.
+Deliveries API é uma aplicação onde possui dois tipos de usuário, o cliente e o entregador.
 
-Utilizei este projeto para praticar conceitos como:
+O cliente pode cadastrar itens para serem entregues, listar, editar e/ou apagar.
+
+O entregador poderá listar todos os itens disponíveis, escolher determinado item para realizar a entrega, listar os itens já escolhidos e marcar um item como entregue.
+
+Quando o entregador marcar o item como entregue, o cliente recebe uma notificação informando-o que a entrega foi concluída.
+
+Foi um projeto muito interessante de desenvolver, pois consegui aplicar diversos conceitos como:
 
 - DDD
 - Repository Pattern
@@ -33,6 +39,7 @@ Utilizei este projeto para praticar conceitos como:
 - SOLID
 - Clean Code
 - Clean Architecture
+- Entre muitos outros...
 
 ## 🚀 Tecnologias
 
